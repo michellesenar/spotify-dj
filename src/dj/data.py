@@ -1,3 +1,4 @@
+from typing import List
 from dataclasses import dataclass
 
 
@@ -27,6 +28,7 @@ class AudioFeatures:
 class Artist:
     name: str
     id: str
+    genres: List[str]
 
 
 @dataclass
@@ -40,3 +42,10 @@ class Track:
 class TrackAnalysis:
     track: Track
     analysis: AudioFeatures
+
+
+@dataclass
+class Album:
+    id: str
+    name: str
+    uri: str
