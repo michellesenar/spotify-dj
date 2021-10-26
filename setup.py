@@ -18,6 +18,7 @@ setup(
     entry_points={
         "console_scripts": [
             "information = dj.cli_information:main",
+            "create_from_csv = dj.cli_create_from_csv:main",
         ],
     },
 )
