@@ -60,7 +60,58 @@ def parse_args(arguments):
     )
     artist_parser.set_defaults(func=artist_information)
 
+    track_parser = subparsers.add_parser("track")
+    track_parser.add_argument(
+        "-t",
+        "--track_name",
+        help="Spotify Track Name",
+        required=True,
+    )
+    track_parser.set_defaults(func=show_track_info)
+
+    genre_parser = subparsers.add_parser("genre")
+    genre_parser.add_argument(
+        "genre_mode",
+        help="List all available genres or recommend songs from a genre",
+        choices=["list", "recommend"],
+    )
+    genre_parser.add_argument(
+        "-g",
+        "--genre",
+        help="Genre(s) to seed recs from",
+        nargs="+",
+        required=False,
+    )
+    genre_parser.add_argument(
+        "-n",
+        "--artist_name",
+        help="Spotify Artist Name(s)",
+        nargs="+",
+        required=False,
+    )
+    genre_parser.set_defaults(func=show_genre_info)
+
     return parser.parse_args()
+
+
+def show_genre_info(args):
+    if args.genre_mode == "list":
+        wrapper.genres()
+    elif args.genre_mode == "recommend":
+        if args.genre: #and args.artist_name:
+            recs = wrapper.recommendations_from_genres(args.artist_name, args.genre)
+        else:
+            print("At least 1 genre and 1 artist required.")
+
+
+
+def show_track_info(args):
+    track = wrapper.search(args.track_name, "track")
+    artist_name = track["artists"][0]["name"]
+    track = wrapper.build_track(track)
+    track_analysis = wrapper.build_track_analysis(track)
+
+    wrapper.log_track_info(artist_name, track_analysis)
 
 
 def show_top_tracks_per_artist(args):
