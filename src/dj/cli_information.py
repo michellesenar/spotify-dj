@@ -19,7 +19,7 @@ def parse_args(arguments):
     artist_parser.add_argument(
         "mode",
         help="Which mode of information?",
-        choices=["all_tracks", "info", "related_artists", "top_tracks"]
+        choices=["all_tracks", "info", "related_artists", "top_tracks"],
     )
     artist_parser.add_argument(
         "-a",
@@ -98,11 +98,10 @@ def show_genre_info(args):
     if args.genre_mode == "list":
         wrapper.genres()
     elif args.genre_mode == "recommend":
-        if args.genre: #and args.artist_name:
+        if args.genre:  # and args.artist_name:
             recs = wrapper.recommendations_from_genres(args.artist_name, args.genre)
         else:
             print("At least 1 genre and 1 artist required.")
-
 
 
 def show_track_info(args):
@@ -143,10 +142,10 @@ def artist_information(args):
         if args.recommend:
             criteria = toml.load(args.input_toml_file)["characteristics"]
             track_recommender(
-                artist, 
-                criteria, 
-                track_analyses, 
-                output_file_name=args.output_csv_file, 
+                artist,
+                criteria,
+                track_analyses,
+                output_file_name=args.output_csv_file,
                 allow_explicit=args.allow_explicit,
             )
 
@@ -160,7 +159,9 @@ def artist_information(args):
         wrapper.get_top_tracks_per_artist(artist_uri, args.allow_explicit)
 
 
-def track_recommender(artist, criteria, track_analyses, output_file_name=None, allow_explicit=False):
+def track_recommender(
+    artist, criteria, track_analyses, output_file_name=None, allow_explicit=False
+):
     if output_file_name:
         filename = f"artist_csvs/{output_file_name}.csv"
     else:
@@ -173,11 +174,20 @@ def track_recommender(artist, criteria, track_analyses, output_file_name=None, a
     else:
         print(f"Creating new CSV %s", filename)
         existing = False
-        
+
     already_seen = []
 
     with open(filename, "a") as fh:
-        fieldnames = ["track_uri", "track_name", "artist_name", "valence", "energy", "speechiness", "bpm", "duration_ms"]
+        fieldnames = [
+            "track_uri",
+            "track_name",
+            "artist_name",
+            "valence",
+            "energy",
+            "speechiness",
+            "bpm",
+            "duration_ms",
+        ]
         writer = csv.DictWriter(fh, fieldnames=fieldnames)
 
         if not existing:
@@ -186,10 +196,13 @@ def track_recommender(artist, criteria, track_analyses, output_file_name=None, a
         for track_analysis in track_analyses:
             track = track_analysis.track
             if analysis := track_analysis.analysis:
-                if matcher.allowable_track(track, allow_explicit=allow_explicit) and matcher.acceptable_track(track, analysis, criteria):
+                if matcher.allowable_track(
+                    track, allow_explicit=allow_explicit
+                ) and matcher.acceptable_track(track, analysis, criteria):
                     songname = f"{track.name}__{artist.name}"
                     if songname not in already_seen:
-                        writer.writerow({
+                        writer.writerow(
+                            {
                                 fieldnames[0]: track.uri,
                                 fieldnames[1]: track.name,
                                 fieldnames[2]: artist.name,
@@ -198,7 +211,8 @@ def track_recommender(artist, criteria, track_analyses, output_file_name=None, a
                                 fieldnames[5]: str(analysis.speechiness),
                                 fieldnames[6]: str(analysis.tempo),
                                 fieldnames[7]: str(analysis.duration_ms),
-                        })
+                            }
+                        )
                         already_seen.append(songname)
                     matcher.log_track_characteristics(artist, track, analysis)
 
