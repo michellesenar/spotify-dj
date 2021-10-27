@@ -1,4 +1,4 @@
-import log_setup
+import logging
 
 FORMATTER = logging.Formatter("%(levelname)s::%(asctime)s::: %(message)s")
 

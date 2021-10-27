@@ -55,15 +55,3 @@ def acceptable_track(track: Track, analysis: AudioFeatures, criteria: Dict[str, 
 
 def log_output_csv(artist: Artist):
     logger.info("Writing results to '%s.csv'", artist.name)
-
-
-def log_track_characteristics(artist: Artist, track: Track, analysis: AudioFeatures):
-    minutes, seconds = divmod(analysis.duration_ms / 1000, 60)
-    logger.debug("")
-    logger.debug("'%s' by %s. Explicit = %s", track.name, artist.name, track.explicit)
-    logger.debug("--Track Duration: %d min %d sec", minutes, seconds)
-    logger.debug("--Track Valence: %s", analysis.valence)
-    logger.debug("--Track Energy: %s", analysis.energy)
-    logger.debug("--Track Speechiness: %s", analysis.speechiness)
-    # logger.debug("---- %s BPM; %s %s", analysis.tempo, KEY_INTEGER_TO_NAME_MAP[analysis.key], MODE_MAP[analysis.mode])
-    # logger.debug("-- instrumentalness: %s", analysis.instrumentalness)

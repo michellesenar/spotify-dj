@@ -5,6 +5,7 @@ import toml
 from pathlib import Path
 
 from . import matcher, wrapper
+from .logging import log_track_characteristics
 
 
 ARTIST_INFO_BY_NAME = "by_name"
@@ -106,11 +107,11 @@ def show_genre_info(args):
 
 def show_track_info(args):
     track = wrapper.search(args.track_name, "track")
-    artist_name = track["artists"][0]["name"]
+    artist = wrapper.build_artist(track["artists"][0]["uri"])
     track = wrapper.build_track(track)
     track_analysis = wrapper.build_track_analysis(track)
 
-    wrapper.log_track_info(artist_name, track_analysis)
+    log_track_characteristics(artist, track_analysis)
 
 
 def show_top_tracks_per_artist(args):
@@ -127,7 +128,7 @@ def get_artist_uri(args):
         artist = wrapper.search(args.artist_name, "artist")
         artist_uri = artist["uri"]
     else:
-        artist_uri == args.artist_uri
+        artist_uri = args.artist_uri
 
     return artist_uri
 

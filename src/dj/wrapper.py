@@ -10,6 +10,7 @@ from spotipy.oauth2 import SpotifyClientCredentials, SpotifyOAuth
 
 from .data import Artist, Album, AudioFeatures, Track, TrackAnalysis
 from .log_setup import get_logger
+from .logging import log_track_characteristics
 
 load_dotenv()
 
@@ -66,6 +67,7 @@ def get_all_tracks(artist: Artist, limit=None):
             track = build_track(track_)
             track_analysis = build_track_analysis(track)
             if track_analysis:  # Deal with returned Nonetypes from Spotify
+                log_track_characteristics(artist, track_analysis)
                 track_infos.append(track_analysis)
 
     
@@ -97,20 +99,6 @@ def build_track_analysis(track: Track) -> TrackAnalysis:
             return TrackAnalysis(track=track, analysis=analysis)
 
 
-# def log_track_info(artist_name, track_analysis):
-#     track = track_analysis.track
-#     analysis = track_analysis.analysis
-#     logger.debug("'%s' by %s", track.name, artist_name)
-
-#     logger.debug("p: %s", str(analysis))
-#     minutes, seconds = divmod(analysis.duration_ms / 1000, 60)
-#     logger.debug("")
-#     logger.debug("'%s' by %s. Explicit = %s", track.name, artist_name, track.explicit)
-#     logger.debug("--Track Duration: %d min %d sec", minutes, seconds)
-#     logger.debug("---- %s BPM", analysis.tempo)
-
-
-
 def build_preliminary_tracklist(
     spotify_tracks: List[Dict[str, Any]], allow_explicit=False
 ) -> List[TrackAnalysis]:
@@ -119,7 +107,8 @@ def build_preliminary_tracklist(
     for t in spotify_tracks:
         track = build_track(t)
         track_analysis = build_track_analysis(track)
-        logger.debug("---- Track Name: %s", track.name)
+        logger.debug("'%s'", track.name)
+        logger.debug("---- URI: %s", track.uri)
         analyses.append(track_analysis)
 
     return analyses
@@ -140,7 +129,6 @@ def recommender(artist_uris: List[str], genres: List[str], limit : int = 20):
 
 
 def recommendations_from_genres(artists: List[str], genres: List[str]):
-    from .matcher import log_track_characteristics
     if artists:
         artist_ids = [get_artist_id(x) for x in artists]
     else:
@@ -149,8 +137,8 @@ def recommendations_from_genres(artists: List[str], genres: List[str]):
     for rec in recs["tracks"]:
         artist = build_artist(rec['artists'][0]['uri'])
         track = build_track(rec)
-        analysis = build_track_analysis(track).analysis
-        log_track_characteristics(artist, track, analysis)
+        track_analysis = build_track_analysis(track)
+        log_track_characteristics(artist, track_analysis)
 
 
 ###### User PLAYLIST STUFF; doesn't really work
