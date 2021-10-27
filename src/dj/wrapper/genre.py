@@ -3,7 +3,8 @@ from typing import List
 from .connection import spotify
 from dj.log_setup import get_logger
 from dj.logging import log_track_characteristics
-from dj.old_wrapper import get_artist_id, build_artist, build_track, build_track_analysis
+from dj.old_wrapper import build_track, build_track_analysis
+from .artist import build_artist, search_artist_id_by_name
 
 logger = get_logger(__name__)
 
@@ -25,7 +26,7 @@ def recommender(artist_uris: List[str], genres: List[str], limit : int = 20):
 
 def recommend_from_official_genres(artists: List[str], genres: List[str]):
     if artists:
-        artist_ids = [get_artist_id(x) for x in artists]
+        artist_ids = [search_artist_id_by_name(x) for x in artists]
     else:
         artist_ids = []
     recs = recommender(artist_ids, genres)

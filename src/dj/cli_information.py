@@ -4,6 +4,7 @@ import sys
 import toml
 from pathlib import Path
 
+import dj.wrapper.artist
 import dj.wrapper.genre
 from . import matcher, old_wrapper
 from .logging import log_track_characteristics
@@ -108,7 +109,7 @@ def show_genre_info(args):
 
 def show_track_info(args):
     track = old_wrapper.search(args.track_name, "track")
-    artist = old_wrapper.build_artist(track["artists"][0]["uri"])
+    artist = dj.wrapper.artist.build_artist(track["artists"][0]["uri"])
     track = old_wrapper.build_track(track)
     track_analysis = old_wrapper.build_track_analysis(track)
 
@@ -116,12 +117,12 @@ def show_track_info(args):
 
 
 def show_top_tracks_per_artist(args):
-    old_wrapper.get_top_tracks_per_artist(args.artist_uri, args.allow_explicit)
+    dj.wrapper.artist.get_top_tracks_per_artist(args.artist_uri, args.allow_explicit)
 
 
 def show_related_artists(args):
-    artist = old_wrapper.build_artist(args.artist_uri)
-    old_wrapper.get_related_artists(artist.id)
+    artist = dj.wrapper.artist.build_artist(args.artist_uri)
+    dj.wrapper.artist.get_related_artists(artist.id)
 
 
 def get_artist_uri(args):
@@ -136,7 +137,7 @@ def get_artist_uri(args):
 
 def artist_information(args):
     artist_uri = get_artist_uri(args)
-    artist = old_wrapper.build_artist(artist_uri)
+    artist = dj.wrapper.artist.build_artist(artist_uri)
 
     if args.mode == "all_tracks":
         track_analyses = old_wrapper.get_all_tracks(artist, limit=args.limit)
@@ -155,10 +156,10 @@ def artist_information(args):
         print(artist)
 
     elif args.mode == "related_artists":
-        old_wrapper.get_related_artists(artist.id)
+        dj.wrapper.artist.get_related_artists(artist.id)
 
     elif args.mode == "top_tracks":
-        old_wrapper.get_top_tracks_per_artist(artist_uri, args.allow_explicit)
+        dj.wrapper.artist.get_top_tracks_per_artist(artist_uri, args.allow_explicit)
 
 
 def track_recommender(

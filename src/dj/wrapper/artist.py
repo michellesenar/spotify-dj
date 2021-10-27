@@ -1,0 +1,34 @@
+from typing import List
+
+from dj.data import Artist
+from dj.log_setup import get_logger
+from .connection import spotify
+from ..old_wrapper import build_preliminary_tracklist
+
+logger = get_logger(__name__)
+
+
+def search_artist_id_by_name(query: str):
+    s = spotify.search(query, type="artist", limit=1)
+    return s["artists"]["items"][0]["id"]
+
+def build_artist(uri: str) -> Artist:
+    artist = spotify.artist(uri)
+    logger.debug("===== Current Artist: %s", artist["name"])
+    return Artist(name=artist["name"], id=artist["id"], genres=artist["genres"])
+
+
+def get_top_tracks_per_artist(artist_uri: str, allow_explicit=False):
+    artist = spotify.artist(artist_uri)
+    top_tracks = spotify.artist_top_tracks(artist["id"])["tracks"]
+    return build_preliminary_tracklist(top_tracks, allow_explicit)
+
+
+def get_related_artists(artist_id: str) -> List[Artist]:
+    related = []
+    for a in spotify.artist_related_artists(artist_id)["artists"]:
+        relative = Artist(name=a["name"], id=a["id"], genres=a["genres"])
+        logger.debug("Related Arist: %s", relative.name)
+        logger.debug("--- Genres: %s", relative.genres)
+        related.append(a)
+    return related
