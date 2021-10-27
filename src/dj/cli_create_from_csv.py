@@ -3,9 +3,9 @@ import sys
 import toml
 from typing import Any, Dict, List
 
-from . import old_wrapper
 from .data import Track, AudioFeatures
 from .log_setup import get_logger
+from dj.wrapper.playlist import add_to_playlist_from_csv
 
 logger = get_logger(__name__)
 
@@ -34,7 +34,7 @@ def main():
     arguments = sys.argv[-1]
     parsed_args = parse_args(arguments)
 
-    wrapper.add_to_playlist_from_csv(
+    add_to_playlist_from_csv(
         parsed_args.username, parsed_args.playlist_id, parsed_args.input_csv_file
     )
 
