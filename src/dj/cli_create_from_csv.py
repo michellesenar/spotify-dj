@@ -3,7 +3,7 @@ import sys
 import toml
 from typing import Any, Dict, List
 
-from . import wrapper
+from . import old_wrapper
 from .data import Track, AudioFeatures
 from .log_setup import get_logger
 

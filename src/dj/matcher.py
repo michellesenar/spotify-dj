@@ -1,7 +1,6 @@
 import toml
 from typing import Any, Dict, List
 
-from . import wrapper
 from .data import Artist, AudioFeatures, Track
 from .log_setup import get_logger
 

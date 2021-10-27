@@ -4,7 +4,7 @@ import sys
 import toml
 from pathlib import Path
 
-from . import matcher, wrapper
+from . import matcher, old_wrapper
 from .logging import log_track_characteristics
 
 
@@ -97,35 +97,35 @@ def parse_args(arguments):
 
 def show_genre_info(args):
     if args.genre_mode == "list":
-        wrapper.genres()
+        old_wrapper.genres()
     elif args.genre_mode == "recommend":
         if args.genre:  # and args.artist_name:
-            recs = wrapper.recommendations_from_genres(args.artist_name, args.genre)
+            recs = old_wrapper.recommendations_from_genres(args.artist_name, args.genre)
         else:
             print("At least 1 genre and 1 artist required.")
 
 
 def show_track_info(args):
-    track = wrapper.search(args.track_name, "track")
-    artist = wrapper.build_artist(track["artists"][0]["uri"])
-    track = wrapper.build_track(track)
-    track_analysis = wrapper.build_track_analysis(track)
+    track = old_wrapper.search(args.track_name, "track")
+    artist = old_wrapper.build_artist(track["artists"][0]["uri"])
+    track = old_wrapper.build_track(track)
+    track_analysis = old_wrapper.build_track_analysis(track)
 
     log_track_characteristics(artist, track_analysis)
 
 
 def show_top_tracks_per_artist(args):
-    wrapper.get_top_tracks_per_artist(args.artist_uri, args.allow_explicit)
+    old_wrapper.get_top_tracks_per_artist(args.artist_uri, args.allow_explicit)
 
 
 def show_related_artists(args):
-    artist = wrapper.build_artist(args.artist_uri)
-    wrapper.get_related_artists(artist.id)
+    artist = old_wrapper.build_artist(args.artist_uri)
+    old_wrapper.get_related_artists(artist.id)
 
 
 def get_artist_uri(args):
     if args.artist_uri == ARTIST_INFO_BY_NAME and args.artist_name:
-        artist = wrapper.search(args.artist_name, "artist")
+        artist = old_wrapper.search(args.artist_name, "artist")
         artist_uri = artist["uri"]
     else:
         artist_uri = args.artist_uri
@@ -135,10 +135,10 @@ def get_artist_uri(args):
 
 def artist_information(args):
     artist_uri = get_artist_uri(args)
-    artist = wrapper.build_artist(artist_uri)
+    artist = old_wrapper.build_artist(artist_uri)
 
     if args.mode == "all_tracks":
-        track_analyses = wrapper.get_all_tracks(artist, limit=args.limit)
+        track_analyses = old_wrapper.get_all_tracks(artist, limit=args.limit)
 
         if args.recommend:
             criteria = toml.load(args.input_toml_file)["characteristics"]
@@ -154,10 +154,10 @@ def artist_information(args):
         print(artist)
 
     elif args.mode == "related_artists":
-        wrapper.get_related_artists(artist.id)
+        old_wrapper.get_related_artists(artist.id)
 
     elif args.mode == "top_tracks":
-        wrapper.get_top_tracks_per_artist(artist_uri, args.allow_explicit)
+        old_wrapper.get_top_tracks_per_artist(artist_uri, args.allow_explicit)
 
 
 def track_recommender(
