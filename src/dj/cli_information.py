@@ -6,6 +6,8 @@ from pathlib import Path
 
 import dj.wrapper.artist
 import dj.wrapper.genre
+import dj.wrapper.track
+import dj.wrapper.util
 from . import matcher, old_wrapper
 from .logging import log_track_characteristics
 
@@ -108,10 +110,10 @@ def show_genre_info(args):
 
 
 def show_track_info(args):
-    track = old_wrapper.search(args.track_name, "track")
+    track = dj.wrapper.util.search(args.track_name, "track")
     artist = dj.wrapper.artist.build_artist(track["artists"][0]["uri"])
-    track = old_wrapper.build_track(track)
-    track_analysis = old_wrapper.build_track_analysis(track)
+    track = dj.wrapper.track.build_track(track)
+    track_analysis = dj.wrapper.track.build_track_analysis(track)
 
     log_track_characteristics(artist, track_analysis)
 
@@ -127,7 +129,7 @@ def show_related_artists(args):
 
 def get_artist_uri(args):
     if args.artist_uri == ARTIST_INFO_BY_NAME and args.artist_name:
-        artist = old_wrapper.search(args.artist_name, "artist")
+        artist = dj.wrapper.util.search(args.artist_name, "artist")
         artist_uri = artist["uri"]
     else:
         artist_uri = args.artist_uri
@@ -140,7 +142,7 @@ def artist_information(args):
     artist = dj.wrapper.artist.build_artist(artist_uri)
 
     if args.mode == "all_tracks":
-        track_analyses = old_wrapper.get_all_tracks(artist, limit=args.limit)
+        track_analyses = dj.wrapper.track.get_all_tracks(artist, limit=args.limit)
 
         if args.recommend:
             criteria = toml.load(args.input_toml_file)["characteristics"]

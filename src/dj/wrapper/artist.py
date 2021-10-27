@@ -3,14 +3,16 @@ from typing import List
 from dj.data import Artist
 from dj.log_setup import get_logger
 from .connection import spotify
-from ..old_wrapper import build_preliminary_tracklist
+from .track import build_preliminary_tracklist
+from .util import search
 
 logger = get_logger(__name__)
 
 
 def search_artist_id_by_name(query: str):
-    s = spotify.search(query, type="artist", limit=1)
-    return s["artists"]["items"][0]["id"]
+    s = search(query, "artist")
+    return s["id"]
+
 
 def build_artist(uri: str) -> Artist:
     artist = spotify.artist(uri)

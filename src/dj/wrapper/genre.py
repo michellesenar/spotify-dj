@@ -3,7 +3,7 @@ from typing import List
 from .connection import spotify
 from dj.log_setup import get_logger
 from dj.logging import log_track_characteristics
-from dj.old_wrapper import build_track, build_track_analysis
+from .track import build_track, build_track_analysis
 from .artist import build_artist, search_artist_id_by_name
 
 logger = get_logger(__name__)
