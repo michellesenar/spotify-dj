@@ -5,7 +5,7 @@ from typing import Any, Dict, List
 
 from . import wrapper
 from .data import Track, AudioFeatures
-from .logging import get_logger
+from .log_setup import get_logger
 
 logger = get_logger(__name__)
 

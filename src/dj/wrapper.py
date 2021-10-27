@@ -9,7 +9,7 @@ import spotipy.util as util
 from spotipy.oauth2 import SpotifyClientCredentials, SpotifyOAuth
 
 from .data import Artist, Album, AudioFeatures, Track, TrackAnalysis
-from .logging import get_logger
+from .log_setup import get_logger
 
 load_dotenv()
 
