@@ -4,6 +4,7 @@ import sys
 import toml
 from pathlib import Path
 
+import dj.wrapper.genre
 from . import matcher, old_wrapper
 from .logging import log_track_characteristics
 
@@ -97,10 +98,10 @@ def parse_args(arguments):
 
 def show_genre_info(args):
     if args.genre_mode == "list":
-        old_wrapper.genres()
+        dj.wrapper.genre.list_genres()
     elif args.genre_mode == "recommend":
         if args.genre:  # and args.artist_name:
-            recs = old_wrapper.recommendations_from_genres(args.artist_name, args.genre)
+            recs = dj.wrapper.genre.recommend_from_official_genres(args.artist_name, args.genre)
         else:
             print("At least 1 genre and 1 artist required.")
 
