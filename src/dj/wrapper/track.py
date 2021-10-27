@@ -2,8 +2,11 @@ from typing import Any, Dict, List
 
 from dj.data import Artist, Album, Track, TrackAnalysis, AudioFeatures
 from dj.logging import log_track_characteristics
-from dj.old_wrapper import logger
+from dj.log_setup import get_logger
 from dj.wrapper.connection import spotify
+
+
+logger = get_logger(__name__)
 
 
 def allowable_track(allow_explicit, track):
@@ -30,7 +33,6 @@ def get_all_tracks(artist: Artist, limit=None):
             if track_analysis:  # Deal with returned Nonetypes from Spotify
                 log_track_characteristics(artist, track_analysis)
                 track_infos.append(track_analysis)
-
 
     return track_infos
 

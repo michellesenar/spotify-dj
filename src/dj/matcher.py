@@ -1,5 +1,4 @@
-import toml
-from typing import Any, Dict, List
+from typing import Any, Dict
 
 from .data import Artist, AudioFeatures, Track
 from .log_setup import get_logger

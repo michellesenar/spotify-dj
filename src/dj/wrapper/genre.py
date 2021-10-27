@@ -16,7 +16,7 @@ def list_genres():
     return official_genres
 
 
-def recommender(artist_uris: List[str], genres: List[str], limit : int = 20):
+def recommender(artist_uris: List[str], genres: List[str], limit: int = 20):
     return spotify.recommendations(
         seed_artists=artist_uris,
         seed_genres=genres,
@@ -31,7 +31,7 @@ def recommend_from_official_genres(artists: List[str], genres: List[str]):
         artist_ids = []
     recs = recommender(artist_ids, genres)
     for rec in recs["tracks"]:
-        artist = build_artist(rec['artists'][0]['uri'])
+        artist = build_artist(rec["artists"][0]["uri"])
         track = build_track(rec)
         track_analysis = build_track_analysis(track)
         log_track_characteristics(artist, track_analysis)

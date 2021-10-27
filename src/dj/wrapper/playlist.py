@@ -7,17 +7,17 @@ def create_new_playlist(playlist_name: str):
 
 
 def get_user_playlists(username: str):
-    user_id = os.getenv(username)
     playlists = spotify.current_user_saved_tracks()
     logger.debug("Playlist Count: %s", playlists["total"])
     return playlists
 
 
 def get_user_playlist_id_from_playlist_name(playlist_name: str):
-    playlists = get_user_playlists(user)
-    for playlist in playlists["items"]:
-        if playlist["name"] == playlist_name:
-            breakpoint()
+    # playlists = get_user_playlists(user)
+    # for playlist in playlists["items"]:
+    #     if playlist["name"] == playlist_name:
+    #         breakpoint()
+    pass
 
 
 def add_to_playlist_from_csv(username: str, playlist_id: str, csv_name: str):

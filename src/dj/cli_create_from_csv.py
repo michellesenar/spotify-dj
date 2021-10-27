@@ -1,7 +1,5 @@
 import argparse
 import sys
-import toml
-from typing import Any, Dict, List
 
 from .data import Track, AudioFeatures
 from .log_setup import get_logger

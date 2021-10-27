@@ -16,10 +16,7 @@ KEY_INTEGER_TO_NAME_MAP = {
     11: "B",
 }
 
-MODE_MAP = {
-    0: "minor",
-    1: "major"
-}
+MODE_MAP = {0: "minor", 1: "major"}
 
 logger = get_logger(__name__)
 
@@ -35,5 +32,10 @@ def log_track_characteristics(artist: Artist, track_analysis: TrackAnalysis):
     logger.debug("--Valence: %s", analysis.valence)
     logger.debug("--Energy: %s", analysis.energy)
     logger.debug("--Speechiness: %s", analysis.speechiness)
-    logger.debug("--Tempo: %s BPM; %s %s", analysis.tempo, KEY_INTEGER_TO_NAME_MAP[analysis.key], MODE_MAP[analysis.mode])
+    logger.debug(
+        "--Tempo: %s BPM; %s %s",
+        analysis.tempo,
+        KEY_INTEGER_TO_NAME_MAP[analysis.key],
+        MODE_MAP[analysis.mode],
+    )
     logger.debug("--Instrumentalness: %s", analysis.instrumentalness)

@@ -8,7 +8,7 @@ import dj.wrapper.artist
 import dj.wrapper.genre
 import dj.wrapper.track
 import dj.wrapper.util
-from . import matcher, old_wrapper
+from . import matcher
 from .logging import log_track_characteristics
 
 
@@ -104,7 +104,9 @@ def show_genre_info(args):
         dj.wrapper.genre.list_genres()
     elif args.genre_mode == "recommend":
         if args.genre:  # and args.artist_name:
-            recs = dj.wrapper.genre.recommend_from_official_genres(args.artist_name, args.genre)
+            dj.wrapper.genre.recommend_from_official_genres(
+                args.artist_name, args.genre
+            )
         else:
             print("At least 1 genre and 1 artist required.")
 
@@ -174,10 +176,10 @@ def track_recommender(
         matcher.log_output_csv(artist)
 
     if Path(filename).exists():
-        print(f"Continue to write to %s", filename)
+        print(f"Continue to write to {filename}")
         existing = True
     else:
-        print(f"Creating new CSV %s", filename)
+        print(f"Creating new CSV {filename}")
         existing = False
 
     already_seen = []
