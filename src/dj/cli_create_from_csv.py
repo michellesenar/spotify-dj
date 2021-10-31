@@ -1,7 +1,6 @@
 import argparse
 import sys
 
-from .data import Track, AudioFeatures
 from .log_setup import get_logger
 from dj.wrapper.playlist import add_to_playlist_from_csv
 

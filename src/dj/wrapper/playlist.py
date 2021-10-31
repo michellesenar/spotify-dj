@@ -1,3 +1,6 @@
+import csv
+import os
+
 from dj.old_wrapper import logger
 from dj.wrapper.connection import spotify
 
@@ -21,22 +24,24 @@ def get_user_playlist_id_from_playlist_name(playlist_name: str):
 
 
 def add_to_playlist_from_csv(username: str, playlist_id: str, csv_name: str):
-
     def _track_name(x):
         return f"{x['name']}__{x['artists'][0]['name']}"
 
     user_id = os.getenv(username)
-    playlist_name = spotify.playlist(playlist_id)['name']
-    existing_track_uris = [x['track']['uri'] for x in spotify.playlist_tracks(playlist_id)['items']]
-    existing_track_names = [_track_name(x['track']) for x in spotify.playlist_tracks(playlist_id)['items']]
+    playlist_name = spotify.playlist(playlist_id)["name"]
+    existing_track_uris = [
+        x["track"]["uri"] for x in spotify.playlist_tracks(playlist_id)["items"]
+    ]
+    existing_track_names = [
+        _track_name(x["track"]) for x in spotify.playlist_tracks(playlist_id)["items"]
+    ]
     new_track_uris = []
-    logger.debug("Adding to %s's playlist '%s' from '%s'", username, playlist_name, csv_name)
+    logger.debug(
+        "Adding to %s's playlist '%s' from '%s'", username, playlist_name, csv_name
+    )
 
     def _batch(seq, size):
-        return [
-            seq[i:i + size]
-            for i in range(0, len(seq), size)
-        ]
+        return [seq[i: i + size] for i in range(0, len(seq), size)]
 
     with open(csv_name, "r") as fh:
         reader = csv.DictReader(fh)
@@ -46,9 +51,17 @@ def add_to_playlist_from_csv(username: str, playlist_id: str, csv_name: str):
             new_track_uris.append((new_track_uri, new_track_name))
 
     for batch in _batch(new_track_uris, 10):
-        actual_new_uris = set([x[0] for x in batch]).difference(set(existing_track_uris))
-        actual_new_names = set([x[1] for x in batch]).difference(set(existing_track_names))
-        if actual_new_uris and actual_new_names and (len(actual_new_uris) == len(actual_new_names)):
+        actual_new_uris = set([x[0] for x in batch]).difference(
+            set(existing_track_uris)
+        )
+        actual_new_names = set([x[1] for x in batch]).difference(
+            set(existing_track_names)
+        )
+        if (
+            actual_new_uris
+            and actual_new_names
+            and (len(actual_new_uris) == len(actual_new_names))
+        ):
             spotify.user_playlist_add_tracks(user_id, playlist_id, actual_new_uris)
 
     logger.debug("Finished adding from %s", csv_name)
