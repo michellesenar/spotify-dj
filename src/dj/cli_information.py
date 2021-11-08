@@ -10,9 +10,13 @@ import dj.wrapper.track
 import dj.wrapper.util
 from . import matcher
 from .logging import log_track_characteristics
+from .log_setup import get_logger
 
 
 ARTIST_INFO_BY_NAME = "by_name"
+
+
+logger = get_logger(__name__)
 
 
 def parse_args(arguments):
@@ -24,7 +28,7 @@ def parse_args(arguments):
     artist_parser.add_argument(
         "mode",
         help="Which mode of information?",
-        choices=["all_tracks", "info", "related_artists", "top_tracks"],
+        choices=["all_tracks", "info", "related_artists", "top_tracks", "master"],
     )
     artist_parser.add_argument(
         "-a",
@@ -143,6 +147,29 @@ def artist_information(args):
     artist_uri = get_artist_uri(args)
     artist = dj.wrapper.artist.build_artist(artist_uri)
 
+    if args.mode == "master":
+        related = dj.wrapper.artist.get_related_artists(artist.id)
+        total_related = len(related)
+        count = 0
+        for related_artist in related:
+            count += 1
+            if True or "chillhop" in related_artist['genres']:
+                logger.info("Gathering results for %d out of %d related artists.", count, total_related)
+                artist = dj.wrapper.artist.build_artist(related_artist['uri'])
+
+                track_analyses = dj.wrapper.track.get_all_tracks(artist, limit=args.limit)
+
+                if args.recommend:
+                    criteria = toml.load(args.input_toml_file)["characteristics"]
+                    track_recommender(
+                        artist,
+                        criteria,
+                        track_analyses,
+                        output_file_name=args.output_csv_file,
+                        allow_explicit=args.allow_explicit,
+                    )
+
+
     if args.mode == "all_tracks":
         track_analyses = dj.wrapper.track.get_all_tracks(artist, limit=args.limit)
 
@@ -221,7 +248,7 @@ def track_recommender(
                             }
                         )
                         already_seen.append(songname)
-                    matcher.log_track_characteristics(artist, track, analysis)
+                        log_track_characteristics(artist, track_analysis)
 
 
 def main():
