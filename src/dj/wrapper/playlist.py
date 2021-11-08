@@ -1,8 +1,11 @@
 import csv
 import os
 
-from dj.old_wrapper import logger
+from dj.log_setup import get_logger
 from dj.wrapper.connection import spotify
+
+
+logger = get_logger(__name__)
 
 
 def create_new_playlist(playlist_name: str):
