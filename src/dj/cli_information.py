@@ -10,7 +10,7 @@ import dj.wrapper.playlist
 import dj.wrapper.track
 import dj.wrapper.util
 from . import matcher
-from .logging import log_track_characteristics
+from .logging import log_track_characteristics, KEY_INTEGER_TO_NAME_MAP, MODE_MAP
 from .log_setup import get_logger
 
 
@@ -231,6 +231,15 @@ def track_recommender(
             "speechiness",
             "bpm",
             "duration_ms",
+            "instrumentalness",
+            "acousticness",
+            "danceability",
+            "key",
+            "mode",
+            "liveness",
+            "loudness",
+            "speechiness",
+            "time_signature",
         ]
         writer = csv.DictWriter(fh, fieldnames=fieldnames)
 
@@ -255,6 +264,15 @@ def track_recommender(
                                 fieldnames[5]: str(analysis.speechiness),
                                 fieldnames[6]: str(analysis.tempo),
                                 fieldnames[7]: str(analysis.duration_ms),
+                                fieldnames[8]: str(analysis.instrumentalness),
+                                fieldnames[9]: str(analysis.acousticness),
+                                fieldnames[10]: str(analysis.danceability),
+                                fieldnames[11]: str(KEY_INTEGER_TO_NAME_MAP[analysis.key]),
+                                fieldnames[12]: str(MODE_MAP[analysis.mode]),
+                                fieldnames[13]: str(analysis.liveness),
+                                fieldnames[14]: str(analysis.loudness),
+                                fieldnames[15]: str(analysis.speechiness),
+                                fieldnames[16]: str(analysis.time_signature),
                             }
                         )
                         already_seen.append(songname)
