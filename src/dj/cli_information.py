@@ -159,15 +159,14 @@ def artist_information(args):
     artist = dj.wrapper.artist.build_artist(artist_uri)
 
     if args.mode == "master":
-        related = dj.wrapper.artist.get_related_artists(artist.id)
-        total_related = len(related)
+        related = [dj.wrapper.artist.build_artist(r['uri']) for r in dj.wrapper.artist.get_related_artists(artist.id)]
+
+        all_artists = [artist] + related
         count = 0
-        for related_artist in related:
+        for artist in all_artists:
             count += 1
             if True or "chillhop" in related_artist['genres']:
-                logger.info("Gathering results for %d out of %d related artists.", count, total_related)
-                artist = dj.wrapper.artist.build_artist(related_artist['uri'])
-
+                logger.info("Gathering results for %d out of %d related artists.", count, len(all_artists))
                 track_analyses = dj.wrapper.track.get_all_tracks(artist, limit=args.limit)
 
                 if args.recommend:

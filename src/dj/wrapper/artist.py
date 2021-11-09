@@ -16,7 +16,7 @@ def search_artist_id_by_name(query: str):
 
 def build_artist(uri: str) -> Artist:
     artist = spotify.artist(uri)
-    logger.debug("===== Current Artist: %s", artist["name"])
+    logger.info("===== Current Artist: %s", artist["name"])
     return Artist(name=artist["name"], id=artist["id"], genres=artist["genres"])
 
 
