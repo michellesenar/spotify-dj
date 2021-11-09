@@ -6,6 +6,7 @@ from pathlib import Path
 
 import dj.wrapper.artist
 import dj.wrapper.genre
+import dj.wrapper.playlist
 import dj.wrapper.track
 import dj.wrapper.util
 from . import matcher
@@ -100,7 +101,17 @@ def parse_args(arguments):
     )
     genre_parser.set_defaults(func=show_genre_info)
 
+    official_parser = subparsers.add_parser("official")
+    official_parser.add_argument(
+        "-p", "--playlist_id", required=True, help="Playlist ID (from 'Share' in UI"
+    )
+    official_parser.set_defaults(func=show_official_spotify_info)
+
     return parser.parse_args()
+
+
+def show_official_spotify_info(args):
+    dj.wrapper.playlist.get_official_spotify_playlist(args.playlist_id)
 
 
 def show_genre_info(args):

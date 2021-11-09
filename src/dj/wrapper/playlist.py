@@ -8,6 +8,17 @@ from dj.wrapper.connection import spotify
 logger = get_logger(__name__)
 
 
+def get_official_spotify_playlist(playlist_id: str):
+    for item in spotify.playlist(playlist_id)['tracks']['items']:
+        track = item['track']
+        main_artist = track['artists'][0]['name']
+        main_id = track['artists'][0]['id']
+        track_name = track['name']
+        track_uri = track['uri']
+
+        logger.debug("'%s' -- %s", track_name, main_artist)
+
+
 def create_new_playlist(playlist_name: str):
     spotify.user_playlist_create(create_new_playlist)
 
