@@ -3,12 +3,14 @@ import os
 
 from dj.log_setup import get_logger
 from dj.wrapper.connection import spotify
+from dj.wrapper.genre import recommend_from_official_genres
 
 
 logger = get_logger(__name__)
 
 
 def get_official_spotify_playlist(playlist_id: str):
+    breakpoint()
     for item in spotify.playlist(playlist_id)['tracks']['items']:
         track = item['track']
         main_artist = track['artists'][0]['name']
@@ -19,8 +21,25 @@ def get_official_spotify_playlist(playlist_id: str):
         logger.debug("'%s' -- %s", track_name, main_artist)
 
 
-def create_new_playlist(playlist_name: str):
-    spotify.user_playlist_create(create_new_playlist)
+def add_recommended_tracks_to_playlist(user_id, artist_names, genres, playlist_id):
+    new_tracks = recommend_from_official_genres(artist_names, genres)
+    track_uris = [t.track.uri for t in new_tracks]
+    spotify.user_playlist_add_tracks(user_id, playlist_id, track_uris)
+
+def create_new_playlist(username: str, playlist_name: str, description: str, artist_names, genres):
+    user_id = os.getenv(username)
+    new_playlist = spotify.user_playlist_create(user_id, playlist_name, description=description)
+    add_recommended_tracks_to_playlist(user_id, artist_names, genres, new_playlist['id'])
+
+    logger.info("Finished creating playlist '%s'", playlist_name)
+
+
+def add_to_existing_playlist(username: str, playlist_name: str, artist_names, genres):
+    user_id = os.getenv(username)
+    playlist_id = [p['id'] for p in spotify.user_playlists(user_id)['items'] if p['name'] == playlist_name][0]
+    add_recommended_tracks_to_playlist(user_id, artist_names, genres, playlist_id)
+
+    logger.info("Added new songs to playlist '%s'", playlist_name)
 
 
 def get_user_playlists(username: str):

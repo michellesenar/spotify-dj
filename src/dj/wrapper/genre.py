@@ -12,7 +12,7 @@ logger = get_logger(__name__)
 def list_genres():
     official_genres = spotify.recommendation_genre_seeds()["genres"]
     for g in official_genres:
-        logger.debug("%s", g)
+        logger.info("%s", g)
     return official_genres
 
 
@@ -30,8 +30,12 @@ def recommend_from_official_genres(artists: List[str], genres: List[str]):
     else:
         artist_ids = []
     recs = recommender(artist_ids, genres)
+    track_analyses = []
     for rec in recs["tracks"]:
         artist = build_artist(rec["artists"][0]["uri"])
         track = build_track(rec)
         track_analysis = build_track_analysis(track)
+        track_analyses.append(track_analysis)
         log_track_characteristics(artist, track_analysis)
+
+    return track_analyses
