@@ -28,6 +28,18 @@ def add_recommended_tracks_to_playlist(user_id, artist_names, genres, playlist_i
     spotify.user_playlist_add_tracks(user_id, playlist_id, track_uris)
 
 
+def add_track_uris_to_existing_playlist_name(username: str, playlist_name: str, track_uris):
+    if len(track_uris):
+        logger.info("Adding %d songs to playlist", len(track_uris))
+        user_id = os.getenv(username)
+        playlist_id = [
+            p["id"]
+            for p in spotify.user_playlists(user_id)["items"]
+            if p["name"] == playlist_name
+        ][0]
+        spotify.user_playlist_add_tracks(user_id, playlist_id, track_uris)
+
+
 def create_new_playlist(
     username: str, playlist_name: str, description: str, artist_names, genres
 ):

@@ -49,3 +49,9 @@ class Album:
     id: str
     name: str
     uri: str
+
+
+@dataclass
+class TrackAnalysisArtist:
+    track_analysis: TrackAnalysis
+    artist: Artist

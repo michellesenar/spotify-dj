@@ -35,7 +35,6 @@ def get_all_tracks(artist: Artist, limit=None):
             track = build_track(track_)
             track_analysis = build_track_analysis(track)
             if track_analysis:  # Deal with returned Nonetypes from Spotify
-                log_track_characteristics(artist, track_analysis)
                 track_infos.append(track_analysis)
 
     return track_infos

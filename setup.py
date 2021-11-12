@@ -20,6 +20,7 @@ setup(
             "information = dj.cli_information:main",
             "create_from_csv = dj.cli_create_from_csv:main",
             "playlist_create = dj.cli_create_playlist_directly:main",
+            "recommend_and_inspect = dj.cli_recommender:main"
         ],
     },
 )
