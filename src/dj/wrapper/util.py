@@ -6,3 +6,9 @@ def search(query: str, type_: str):
 
     for item in s[f"{type_}s"]["items"]:
         return item
+
+
+def find(query: str, type_: str):
+    s = spotify.search(query, type=type_, limit=10)
+
+    return s[f"{type_}s"]["items"]
