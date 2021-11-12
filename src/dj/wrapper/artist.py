@@ -4,7 +4,7 @@ from dj.data import Artist
 from dj.log_setup import get_logger
 from .connection import spotify
 from .track import build_preliminary_tracklist
-from .util import search
+from .util import find, search
 
 logger = get_logger(__name__)
 
@@ -13,6 +13,10 @@ def search_artist_id_by_name(query: str):
     s = search(query, "artist")
     return s["id"]
 
+
+def find_an_artist_by_name(query: str):
+    f = find(query, "artist")
+    return f
 
 def build_artist(uri: str) -> Artist:
     artist = spotify.artist(uri)
@@ -30,7 +34,7 @@ def get_related_artists(artist_id: str) -> List[Artist]:
     related = []
     for a in spotify.artist_related_artists(artist_id)["artists"]:
         relative = Artist(name=a["name"], id=a["id"], genres=a["genres"])
-        logger.debug("Related Arist: %s", relative.name)
+        logger.info("Related Arist: %s", relative.name)
         logger.debug("--- Genres: %s", relative.genres)
         related.append(a)
     return related

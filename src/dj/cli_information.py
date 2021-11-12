@@ -29,7 +29,7 @@ def parse_args(arguments):
     artist_parser.add_argument(
         "mode",
         help="Which mode of information?",
-        choices=["all_tracks", "info", "related_artists", "top_tracks", "master"],
+        choices=["all_tracks", "info", "find", "related_artists", "top_tracks", "master"],
     )
     artist_parser.add_argument(
         "-a",
@@ -207,6 +207,12 @@ def artist_information(args):
 
     elif args.mode == "info":
         print(artist)
+
+    elif args.mode == "find":
+        artists = dj.wrapper.util.find(args.artist_name, "artist")
+        for a in artists:
+            logger.info("%s -- %s; genres = %s", a["name"], a["uri"], a["genres"])
+
 
     elif args.mode == "related_artists":
         dj.wrapper.artist.get_related_artists(artist.id)
