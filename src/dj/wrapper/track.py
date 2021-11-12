@@ -13,6 +13,10 @@ def allowable_track(allow_explicit, track):
     return allow_explicit or not track.explicit
 
 
+def get_track_by_uri(uri: str):
+    return spotify.track(uri)
+
+
 def get_all_tracks(artist: Artist, limit=None):
     track_infos = []
     albums = [

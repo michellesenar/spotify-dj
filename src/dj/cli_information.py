@@ -75,7 +75,13 @@ def parse_args(arguments):
         "-t",
         "--track_name",
         help="Spotify Track Name",
-        required=True,
+        required=False,
+    )
+    track_parser.add_argument(
+        "-T",
+        "--track_uri",
+        help="Spotify Track URI",
+        required=False,
     )
     track_parser.set_defaults(func=show_track_info)
 
@@ -127,7 +133,13 @@ def show_genre_info(args):
 
 
 def show_track_info(args):
-    track = dj.wrapper.util.search(args.track_name, "track")
+    if args.track_name and not args.track_uri:
+        track = dj.wrapper.util.search(args.track_name, "track")
+    elif args.track_uri and not args.track_name:
+        track = dj.wrapper.track.get_track_by_uri(args.track_uri)
+    else:
+        raise RuntimeError("Track Info by either URI or Name. Not both")
+
     artist = dj.wrapper.artist.build_artist(track["artists"][0]["uri"])
     track = dj.wrapper.track.build_track(track)
     track_analysis = dj.wrapper.track.build_track_analysis(track)
