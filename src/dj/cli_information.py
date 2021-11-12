@@ -109,7 +109,13 @@ def parse_args(arguments):
 
     official_parser = subparsers.add_parser("official")
     official_parser.add_argument(
-        "-p", "--playlist_id", required=True, help="Playlist ID (from 'Share' in UI"
+        "-p", "--playlist_id", required=True, help="Playlist ID (from 'Share' in UI)"
+    )
+    official_parser.set_defaults(func=show_official_spotify_info)
+
+    user_parser = subparsers.add_parser("user")
+    user_parser.add_argument(
+        "-p", "--playlist_id", required=True, help="Playlist ID (from 'Share' in UI)"
     )
     official_parser.set_defaults(func=show_official_spotify_info)
 
@@ -171,13 +177,14 @@ def artist_information(args):
     artist = dj.wrapper.artist.build_artist(artist_uri)
 
     if args.mode == "master":
+        logger.info("Write results to: %s", f"artist_csvs/{args.output_csv_file}.csv")
         related = [dj.wrapper.artist.build_artist(r['uri']) for r in dj.wrapper.artist.get_related_artists(artist.id)]
 
         all_artists = [artist] + related
         count = 0
         for artist in all_artists:
             count += 1
-            if True or "chillhop" in related_artist['genres']:
+            if True or "chillhop" in artist.genres:
                 logger.info("Gathering results for %d out of %d related artists.", count, len(all_artists))
                 track_analyses = dj.wrapper.track.get_all_tracks(artist, limit=args.limit)
 
@@ -231,10 +238,8 @@ def track_recommender(
         matcher.log_output_csv(artist)
 
     if Path(filename).exists():
-        print(f"Continue to write to {filename}")
         existing = True
     else:
-        print(f"Creating new CSV {filename}")
         existing = False
 
     already_seen = []

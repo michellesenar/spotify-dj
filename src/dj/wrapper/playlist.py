@@ -22,6 +22,7 @@ def get_official_spotify_playlist(playlist_id: str):
 
 
 def add_recommended_tracks_to_playlist(user_id, artist_names, genres, playlist_id):
+    logger.info("Playlist ID: %s", playlist_id)
     new_tracks = recommend_from_official_genres(artist_names, genres)
     track_uris = [t.track.uri for t in new_tracks]
     spotify.user_playlist_add_tracks(user_id, playlist_id, track_uris)
