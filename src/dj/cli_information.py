@@ -29,7 +29,14 @@ def parse_args(arguments):
     artist_parser.add_argument(
         "mode",
         help="Which mode of information?",
-        choices=["all_tracks", "info", "find", "related_artists", "top_tracks", "master"],
+        choices=[
+            "all_tracks",
+            "info",
+            "find",
+            "related_artists",
+            "top_tracks",
+            "master",
+        ],
     )
     artist_parser.add_argument(
         "-a",
@@ -178,15 +185,24 @@ def artist_information(args):
 
     if args.mode == "master":
         logger.info("Write results to: %s", f"artist_csvs/{args.output_csv_file}.csv")
-        related = [dj.wrapper.artist.build_artist(r['uri']) for r in dj.wrapper.artist.get_related_artists(artist.id)]
+        related = [
+            dj.wrapper.artist.build_artist(r["uri"])
+            for r in dj.wrapper.artist.get_related_artists(artist.id)
+        ]
 
         all_artists = [artist] + related
         count = 0
         for artist in all_artists:
             count += 1
             if True or "chillhop" in artist.genres:
-                logger.info("Gathering results for %d out of %d related artists.", count, len(all_artists))
-                track_analyses = dj.wrapper.track.get_all_tracks(artist, limit=args.limit)
+                logger.info(
+                    "Gathering results for %d out of %d related artists.",
+                    count,
+                    len(all_artists),
+                )
+                track_analyses = dj.wrapper.track.get_all_tracks(
+                    artist, limit=args.limit
+                )
 
                 if args.recommend:
                     criteria = toml.load(args.input_toml_file)["characteristics"]
@@ -197,7 +213,6 @@ def artist_information(args):
                         output_file_name=args.output_csv_file,
                         allow_explicit=args.allow_explicit,
                     )
-
 
     if args.mode == "all_tracks":
         track_analyses = dj.wrapper.track.get_all_tracks(artist, limit=args.limit)
@@ -219,7 +234,6 @@ def artist_information(args):
         artists = dj.wrapper.util.find(args.artist_name, "artist")
         for a in artists:
             logger.info("%s -- %s; genres = %s", a["name"], a["uri"], a["genres"])
-
 
     elif args.mode == "related_artists":
         dj.wrapper.artist.get_related_artists(artist.id)
@@ -290,7 +304,9 @@ def track_recommender(
                                 fieldnames[8]: str(analysis.instrumentalness),
                                 fieldnames[9]: str(analysis.acousticness),
                                 fieldnames[10]: str(analysis.danceability),
-                                fieldnames[11]: str(KEY_INTEGER_TO_NAME_MAP[analysis.key]),
+                                fieldnames[11]: str(
+                                    KEY_INTEGER_TO_NAME_MAP[analysis.key]
+                                ),
                                 fieldnames[12]: str(MODE_MAP[analysis.mode]),
                                 fieldnames[13]: str(analysis.liveness),
                                 fieldnames[14]: str(analysis.loudness),

@@ -11,12 +11,12 @@ logger = get_logger(__name__)
 
 def get_official_spotify_playlist(playlist_id: str):
     breakpoint()
-    for item in spotify.playlist(playlist_id)['tracks']['items']:
-        track = item['track']
-        main_artist = track['artists'][0]['name']
-        main_id = track['artists'][0]['id']
-        track_name = track['name']
-        track_uri = track['uri']
+    for item in spotify.playlist(playlist_id)["tracks"]["items"]:
+        track = item["track"]
+        main_artist = track["artists"][0]["name"]
+        main_id = track["artists"][0]["id"]
+        track_name = track["name"]
+        track_uri = track["uri"]
 
         logger.debug("'%s' -- %s", track_name, main_artist)
 
@@ -27,17 +27,28 @@ def add_recommended_tracks_to_playlist(user_id, artist_names, genres, playlist_i
     track_uris = [t.track.uri for t in new_tracks]
     spotify.user_playlist_add_tracks(user_id, playlist_id, track_uris)
 
-def create_new_playlist(username: str, playlist_name: str, description: str, artist_names, genres):
+
+def create_new_playlist(
+    username: str, playlist_name: str, description: str, artist_names, genres
+):
     user_id = os.getenv(username)
-    new_playlist = spotify.user_playlist_create(user_id, playlist_name, description=description)
-    add_recommended_tracks_to_playlist(user_id, artist_names, genres, new_playlist['id'])
+    new_playlist = spotify.user_playlist_create(
+        user_id, playlist_name, description=description
+    )
+    add_recommended_tracks_to_playlist(
+        user_id, artist_names, genres, new_playlist["id"]
+    )
 
     logger.info("Finished creating playlist '%s'", playlist_name)
 
 
 def add_to_existing_playlist(username: str, playlist_name: str, artist_names, genres):
     user_id = os.getenv(username)
-    playlist_id = [p['id'] for p in spotify.user_playlists(user_id)['items'] if p['name'] == playlist_name][0]
+    playlist_id = [
+        p["id"]
+        for p in spotify.user_playlists(user_id)["items"]
+        if p["name"] == playlist_name
+    ][0]
     add_recommended_tracks_to_playlist(user_id, artist_names, genres, playlist_id)
 
     logger.info("Added new songs to playlist '%s'", playlist_name)
@@ -75,7 +86,7 @@ def add_to_playlist_from_csv(username: str, playlist_id: str, csv_name: str):
     )
 
     def _batch(seq, size):
-        return [seq[i: i + size] for i in range(0, len(seq), size)]
+        return [seq[i : i + size] for i in range(0, len(seq), size)]
 
     with open(csv_name, "r") as fh:
         reader = csv.DictReader(fh)

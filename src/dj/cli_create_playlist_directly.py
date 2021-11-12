@@ -48,12 +48,18 @@ def main():
 
     if parsed_args.existing:
         add_to_existing_playlist(
-            parsed_args.username, parsed_args.playlist_name, parsed_args.artist_name,
-            parsed_args.genre
+            parsed_args.username,
+            parsed_args.playlist_name,
+            parsed_args.artist_name,
+            parsed_args.genre,
         )
     else:
         create_new_playlist(
-            parsed_args.username, parsed_args.playlist_name, parsed_args.description, parsed_args.artist_name, parsed_args.genre
+            parsed_args.username,
+            parsed_args.playlist_name,
+            parsed_args.description,
+            parsed_args.artist_name,
+            parsed_args.genre,
         )
 
 
