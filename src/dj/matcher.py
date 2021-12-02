@@ -13,9 +13,15 @@ def allowable_track(track, allow_explicit=False):
 def compare_values(section: Dict[str, Any], keyname: str, actual_value: float) -> bool:
     if criteria_value := section.get(keyname):
         if keyname.startswith("min"):
-            return actual_value >= criteria_value
+            if keyname == "tempo":
+                return actual_value >= criteria_value or (2 * actual_value >= 2 * criteria_value)
+            else:
+                return actual_value >= criteria_value
         elif keyname.startswith("max"):
-            return actual_value <= criteria_value
+            if keyname == "tempo":
+                return actual_value <= criteria_value or (2 * actual_value <= 2 * criteria_value)
+            else:
+                return actual_value <= criteria_value
         else:
             return actual_value == criteria_value
     else:
