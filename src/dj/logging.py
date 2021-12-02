@@ -26,7 +26,7 @@ def log_track_characteristics(artist: Artist, track_analysis: TrackAnalysis):
     analysis = track_analysis.analysis
 
     minutes, seconds = divmod(analysis.duration_ms / 1000, 60)
-    logger.debug("")
+    logger.debug("URI: %s", track.uri)
     logger.debug("'%s' by %s. Explicit = %s", track.name, artist.name, track.explicit)
     logger.debug("--Duration: %d min %d sec", minutes, seconds)
     logger.debug("--Valence: %s", analysis.valence)
@@ -39,3 +39,4 @@ def log_track_characteristics(artist: Artist, track_analysis: TrackAnalysis):
         MODE_MAP[analysis.mode],
     )
     logger.debug("--Instrumentalness: %s", analysis.instrumentalness)
+    logger.debug("--Danceability: %s", analysis.danceability)
