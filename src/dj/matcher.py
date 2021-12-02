@@ -47,9 +47,21 @@ def acceptable_track(track: Track, analysis: AudioFeatures, criteria: Dict[str, 
         and compare_values(criteria, "max_instrumentalness", analysis.instrumentalness)
         and compare_values(criteria, "min_speechiness", analysis.speechiness)
         and compare_values(criteria, "min_speechiness", analysis.speechiness)
+        and compare_values(criteria, "min_acousticness", analysis.acousticness)
+        and compare_values(criteria, "max_acousticness", analysis.acousticness)
+        and compare_values(criteria, "min_danceability", analysis.danceability)
+        and compare_values(criteria, "max_danceability", analysis.danceability)
+        and compare_values(criteria, "min_liveness", analysis.liveness)
+        and compare_values(criteria, "max_liveness", analysis.liveness)
+        and compare_values(criteria, "min_loudness", analysis.loudness)
+        and compare_values(criteria, "max_loudness", analysis.loudness)
         and valence_energy_relationship(criteria, analysis)
     )
 
 
 def log_output_csv(artist: Artist):
     logger.info("Writing results to '%s.csv'", artist.name)
+
+
+def keep_track(criteria, track, analysis, allow_explicit=False):
+    return allowable_track(track, allow_explicit=allow_explicit) and acceptable_track(track, analysis, criteria)
